@@ -1,15 +1,15 @@
-﻿using HarmonyLib;
-using Jotunn.Managers;
-using QuickPing.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using HarmonyLib;
+using Jotunn.Managers;
+using QuickPing2.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace QuickPing.Patches
+namespace QuickPing2.Patches
 {
     /// <summary>
     /// Not really a patch, but a modified game method used in a patch.
@@ -191,7 +191,7 @@ namespace QuickPing.Patches
                         pinData = Minimap.instance.AddPin(pinData.m_pos, pinData.m_type, pinData.m_name, true, false,
                             0L);
                         pinned = true;
-                        QuickPingPlugin.Log.LogInfo(
+                        QuickPing2Plugin.Log.LogInfo(
                             $"Add Portal Pin : Name:{pinData.m_name} x:{pinData.m_pos.x}, y:{pinData.m_pos.y}, Type:{pinData.m_type}");
                     }
 
@@ -218,7 +218,7 @@ namespace QuickPing.Patches
                             pinData = Minimap.instance.AddPin(pinData.m_pos, pinData.m_type, pinData.m_name, true,
                                 false, 0L);
                             pinned = true;
-                            QuickPingPlugin.Log.LogInfo(
+                            QuickPing2Plugin.Log.LogInfo(
                                 $"Add Pin : Name:{pinData.m_name} x:{pinData.m_pos.x}, y:{pinData.m_pos.y}, Type:{pinData.m_type}");
                             break;
                         }
@@ -234,7 +234,7 @@ namespace QuickPing.Patches
                             else if (rename)
                                 pinData = closestPin;
 
-                            QuickPingPlugin.Log.LogInfo(
+                            QuickPing2Plugin.Log.LogInfo(
                                 $"Add Pin : Name:{pinData.m_name} x:{pinData.m_pos.x}, y:{pinData.m_pos.y}, Type:{pinData.m_type}");
 
                             //Check if Settings.AskForName.Value is true, and if CustomNames contains its name.
@@ -258,7 +258,7 @@ namespace QuickPing.Patches
                     .GetField("m_nview", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (fieldInfo == null)
                 {
-                    QuickPingPlugin.Log.LogWarning(
+                    QuickPing2Plugin.Log.LogWarning(
                         $"Unable to link destructible {idestructible} to pin: {pinData.m_name}. (Is it a god?)");
                     return;
                 }
@@ -267,7 +267,7 @@ namespace QuickPing.Patches
                 ZDOID uid = netView.GetZDO().m_uid;
                 if (uid == null)
                 {
-                    QuickPingPlugin.Log.LogError($"Try adding {idestructible} but {netView} uid is null");
+                    QuickPing2Plugin.Log.LogError($"Try adding {idestructible} but {netView} uid is null");
                 }
 
                 if (!DataManager.PinnedObjects.ContainsKey(uid))
@@ -350,7 +350,7 @@ namespace QuickPing.Patches
             // Persistent save of text value for this pinned object
             if (save)
             {
-                QuickPingPlugin.Log.LogInfo($"Save name {Minimap.instance.m_namePin.m_name} for {originalText}");
+                QuickPing2Plugin.Log.LogInfo($"Save name {Minimap.instance.m_namePin.m_name} for {originalText}");
                 SaveName(Minimap.instance.m_namePin.m_name, originalText);
             }
 
@@ -401,13 +401,13 @@ namespace QuickPing.Patches
         {
             if (GUIManager.Instance == null)
             {
-                QuickPingPlugin.Log.LogError("GUIManager instance is null");
+                QuickPing2Plugin.Log.LogError("GUIManager instance is null");
                 return;
             }
 
             if (!GUIManager.CustomGUIFront)
             {
-                QuickPingPlugin.Log.LogError("GUIManager CustomGUI is null");
+                QuickPing2Plugin.Log.LogError("GUIManager CustomGUI is null");
                 return;
             }
 
@@ -490,7 +490,7 @@ namespace QuickPing.Patches
         [HarmonyPrefix]
         public static bool RemovePin(Minimap __instance, Minimap.PinData pin)
         {
-            //checks 
+            //checks
             if (pin == null || pin.m_name == null || pin.m_name == "")
             {
                 return true;

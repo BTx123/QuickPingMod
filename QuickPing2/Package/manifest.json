@@ -1,0 +1,9 @@
+{
+    "name": "QuickPing2",
+    "description": "Ping what you see and pin it on the map !",
+    "version_number": "2.0.0",
+    "website_url": "https://github.com/Vodianoi/QuickPingMod",
+    "dependencies": [
+      "ValheimModding-Jotunn-2.20.3"
+    ]
+}

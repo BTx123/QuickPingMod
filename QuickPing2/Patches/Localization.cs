@@ -1,8 +1,9 @@
 ﻿//using System.Collections.Generic;
+
 using System.Collections.Generic;
 using System.Linq;
 
-namespace QuickPing.Patches
+namespace QuickPing2.Patches
 {
     public static class Localization_Patch
     {

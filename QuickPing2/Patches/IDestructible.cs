@@ -1,8 +1,8 @@
 ﻿using HarmonyLib;
-using QuickPing.Utilities;
+using QuickPing2.Utilities;
 using UnityEngine;
 
-namespace QuickPing.Patches
+namespace QuickPing2.Patches
 {
     [HarmonyPatch(typeof(MineRock5))]
     internal static class MineRock5_Patch
@@ -47,17 +47,12 @@ namespace QuickPing.Patches
     [HarmonyPatch(typeof(Destructible))]
     internal static class Destructible_Patch
     {
-        /// <summary>
-        /// Complete patch, check if Destructible place something on destroy, if true change zdoid of PinnedObjects to ondestroy object
-        /// </summary>
-        /// <param name="__instance"></param>
-        /// <param name="hitPoint"></param>
-        /// <param name="hitDir"></param>
-        /// <returns></returns>
         [HarmonyPatch(typeof(Destructible), nameof(Destructible.Destroy))]
         [HarmonyPrefix]
-        public static bool Destroy(Destructible __instance, Vector3 hitPoint, Vector3 hitDir)
+        public static bool Destroy(Destructible __instance, HitData hit)
         {
+            var hitPoint = hit?.m_point ?? Vector3.zero;
+            var hitDir = hit?.m_dir ?? Vector3.zero;
 
             __instance.CreateDestructionEffects(hitPoint, hitDir);
             if (__instance.m_destroyNoise > 0f)

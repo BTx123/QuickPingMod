@@ -1,12 +1,10 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
+using HarmonyLib;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace QuickPing.Patches
+namespace QuickPing2.Patches
 {
-
-    #region Patches
     /// <summary>
     /// Patch Player Class to add Ping Key and automatic pins
     /// </summary>
@@ -16,7 +14,6 @@ namespace QuickPing.Patches
         public static UnityEvent<HoverObject> OnPlayerForcePing = new UnityEvent<HoverObject>();
         public static UnityEvent<HoverObject> OnPlayerRename = new UnityEvent<HoverObject>();
 
-
         /// <summary>
         /// Check for Key Input
         /// </summary>
@@ -25,7 +22,7 @@ namespace QuickPing.Patches
         [HarmonyPostfix]
         private static void Player_Update(Player __instance)
         {
-            //Check ZInput instance 
+            //Check ZInput instance
             if (ZInput.instance == null) return;
             //Check instance
             if (!Player.m_localPlayer || Player.m_localPlayer != __instance) return;
@@ -73,7 +70,6 @@ namespace QuickPing.Patches
             }
         }
 
-        #endregion
         private static string GetHoverName(string pingText, GameObject hover, HoverType type)
         {
             switch (type)
@@ -113,12 +109,13 @@ namespace QuickPing.Patches
                 case HoverType.Character:
                     var hoverCreature = hover.GetComponent<Character>();
                     pingText = hoverCreature.m_name;
-
+                    break;
+                default:
+                    // TODO: Add default behavior
                     break;
             }
             return pingText;
         }
-
 
         /// <summary>
         /// 
@@ -159,7 +156,6 @@ namespace QuickPing.Patches
                     continue;
                 }
 
-
                 //If ray hit in range
                 if (Vector3.Distance(Player.m_localPlayer.GetEyePoint(), raycastHit.point) < range)
                 {
@@ -177,9 +173,8 @@ namespace QuickPing.Patches
                     {
                         hoverObj.Hover = raycastHit.collider.transform.gameObject;
                         hoverObj.center = hoverObj.Hover.transform.position;
-                        QuickPingPlugin.Log.LogWarning("Root");
+                        QuickPing2Plugin.Log.LogWarning("Root");
                     }
-
 
                     //Children (might be useless)
                     else if (raycastHit.collider.GetComponentInChildren<GameObject>() != null)
@@ -191,7 +186,7 @@ namespace QuickPing.Patches
                             {
                                 hoverObj.Hover = go.transform.gameObject;
                                 hoverObj.center = hoverObj.Hover.transform.position;
-                                QuickPingPlugin.Log.LogWarning("Child");
+                                QuickPing2Plugin.Log.LogWarning("Child");
                             }
                         }
 
@@ -228,31 +223,35 @@ namespace QuickPing.Patches
                 switch (hoverObj.type)
                 {
                     case HoverType.GameObject:
-                        QuickPingPlugin.Log.LogWarning($"Ping ! : {hoverObj.Hover} (GameObject)");
+                        QuickPing2Plugin.Log.LogWarning($"Ping ! : {hoverObj.Hover} (GameObject)");
                         break;
                     case HoverType.Hoverable:
                         if (hoverObj.Hover.TryGetComponent(out Hoverable hoverable))
-                            QuickPingPlugin.Log.LogWarning($"Ping ! : {hoverable} (Hoverable) -> Name: {hoverable.GetHoverName()}");
+                            QuickPing2Plugin.Log.LogWarning($"Ping ! : {hoverable} (Hoverable) -> Name: {hoverable.GetHoverName()}");
                         break;
                     case HoverType.Piece:
                         if (hoverObj.Hover.TryGetComponent(out Piece piece))
-                            QuickPingPlugin.Log.LogWarning($"Ping ! : {piece} (Piece) -> Name: {piece.name} -> Trad: {Localization.instance.Localize(piece.name)}");
+                            QuickPing2Plugin.Log.LogWarning($"Ping ! : {piece} (Piece) -> Name: {piece.name} -> Trad: {Localization.instance.Localize(piece.name)}");
                         break;
                     case HoverType.Location:
                         if (hoverObj.Hover.TryGetComponent(out Location location))
-                            QuickPingPlugin.Log.LogWarning($"Ping ! : {location} (Location) -> Name: {location.name} -> Trad: {Localization.instance.Localize(location.name)}");
+                            QuickPing2Plugin.Log.LogWarning($"Ping ! : {location} (Location) -> Name: {location.name} -> Trad: {Localization.instance.Localize(location.name)}");
 
                         break;
                     case HoverType.Character:
                         if (hoverObj.Hover.TryGetComponent(out Character hoverCreature))
-                            QuickPingPlugin.Log.LogWarning($"Ping ! : {hoverCreature} (Character) ->  Name: {hoverCreature.m_name} -> Trad: {hoverCreature.GetHoverName()}");
+                            QuickPing2Plugin.Log.LogWarning($"Ping ! : {hoverCreature} (Character) ->  Name: {hoverCreature.m_name} -> Trad: {hoverCreature.GetHoverName()}");
 
                         break;
 
+                    default:
+                        // TODO: Add default behavior
+                        QuickPing2Plugin.Log.LogWarning($"Ping ! : {hoverObj.type} (Unknown)");
+                        break;
                 }
                 if (hoverObj.Destructible != null)
                 {
-                    QuickPingPlugin.Log.LogWarning($"Ping ! : {hoverObj.Destructible} (Destructible) -> Type: {hoverObj.Destructible.GetDestructibleType()}");
+                    QuickPing2Plugin.Log.LogWarning($"Ping ! : {hoverObj.Destructible} (Destructible) -> Type: {hoverObj.Destructible.GetDestructibleType()}");
                 }
 #endif
             }
@@ -302,11 +301,11 @@ namespace QuickPing.Patches
             Player localPlayer = Player.m_localPlayer;
             if ((bool)localPlayer && Settings.PingWhereLooking.Value)
             {
-                QuickPingPlugin.Log.LogInfo("SendPing : " + text);
+                QuickPing2Plugin.Log.LogInfo("SendPing : " + text);
                 ZRoutedRpc.instance.InvokeRoutedRPC(local ? Player.m_localPlayer.GetZDOID().UserID : ZRoutedRpc.Everybody, "ChatMessage", position, 3, UserInfo.GetLocalUser(), text, PrivilegeManager.GetNetworkUserId());
                 if (Player.m_debugMode && Console.instance != null && Console.instance.IsCheatsEnabled() && Console.instance != null)
                 {
-                    Console.instance.AddString(string.Format("Pinged at: {0}, {1}", position.x, position.z));
+                    Console.instance.AddString($"Pinged at: {position.x}, {position.z}");
                 }
             }
         }

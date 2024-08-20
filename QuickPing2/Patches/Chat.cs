@@ -2,9 +2,8 @@
 using TMPro;
 using UnityEngine;
 
-namespace QuickPing.Patches
+namespace QuickPing2.Patches
 {
-
     public class ChatPing_Patch
     {
         /// <summary>
@@ -92,7 +91,5 @@ namespace QuickPing.Patches
 
             return false;
         }
-
     }
-
 }

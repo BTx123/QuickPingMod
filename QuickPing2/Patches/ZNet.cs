@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
-using QuickPing.Utilities;
+using QuickPing2.Utilities;
 
-namespace QuickPing.Patches
+namespace QuickPing2.Patches
 {
     public class ZNet_Patch
     {
@@ -18,7 +18,7 @@ namespace QuickPing.Patches
         {
             bool cloudSaveFailed = DataManager.Save(ZNet.m_world, Game.instance.GetPlayerProfile());
 
-            QuickPingPlugin.Log.LogInfo($"cloud save : {!cloudSaveFailed}");
+            QuickPing2Plugin.Log.LogInfo($"cloud save : {!cloudSaveFailed}");
         }
     }
 }

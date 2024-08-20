@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
+using HarmonyLib;
 using UnityEngine;
 
-namespace QuickPing.Patches
+namespace QuickPing2.Patches
 {
     internal class Terminal_Patch
     {
@@ -22,6 +22,8 @@ namespace QuickPing.Patches
                     color = Settings.WhisperColor.Value;
                     text = text.ToLowerInvariant();
                     break;
+                case Talker.Type.Normal:
+                case Talker.Type.Ping:
                 default:
                     color = Settings.DefaultColor.Value;
                     break;

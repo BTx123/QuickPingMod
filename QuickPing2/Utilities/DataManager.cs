@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace QuickPing.Utilities
+namespace QuickPing2.Utilities
 {
     internal static class DataManager
     {
         #region Public Fields
+
         public static Dictionary<ZDOID, Minimap.PinData> PinnedObjects = new();
         public static Dictionary<string, string> CustomNames = new();
+
         #endregion
 
         #region Private Fields
         #endregion
 
         #region Public Methods
+
         public static bool Save(World world, PlayerProfile playerProfile)
         {
             bool cloudSaveNamesFailed = SaveCustomNames(world, playerProfile);
@@ -28,9 +31,11 @@ namespace QuickPing.Utilities
             LoadCustomNames(world, playerProfile);
             LoadPinnedObjects(world, playerProfile);
         }
+
         #endregion
 
         #region Private Methods
+
         private static void LoadPinnedObjects(World world, PlayerProfile playerProfile)
         {
             PinnedObjects.Clear();
@@ -45,7 +50,7 @@ namespace QuickPing.Utilities
             catch
             {
                 fileReader?.Dispose();
-                QuickPingPlugin.Log.LogWarning($"Failed to load pinned objects. World: {world.m_name} - Profile: {playerProfile.m_playerName}");
+                QuickPing2Plugin.Log.LogWarning($"Failed to load pinned objects. World: {world.m_name} - Profile: {playerProfile.m_playerName}");
                 //return new World(__name, loadError: true, versionError: false, __fileSource);
                 return;
             }
@@ -57,6 +62,7 @@ namespace QuickPing.Utilities
 
             UnpackPinnedObjects(zPackage);
         }
+
         private static bool SavePinnedObjects(World world, PlayerProfile playerProfile)
         {
 
@@ -101,7 +107,7 @@ namespace QuickPing.Utilities
             catch
             {
                 fileReader?.Dispose();
-                QuickPingPlugin.Log.LogWarning($"Failed to load custom names. World: {world.m_name} - Profile: {playerProfile.m_playerName}");
+                QuickPing2Plugin.Log.LogWarning($"Failed to load custom names. World: {world.m_name} - Profile: {playerProfile.m_playerName}");
                 return;
             }
 
@@ -143,7 +149,6 @@ namespace QuickPing.Utilities
             return cloudSaveFailed;
         }
 
-
         private static string GetPath(World world, PlayerProfile playerProfile, string extension)
         {
             FileHelpers.SplitFilePath(world.GetDBPath(), out string directory, out string fileName, out string fileExtension);
@@ -158,7 +163,6 @@ namespace QuickPing.Utilities
         }
 
         #endregion
-
 
         #region Packaging
 
@@ -228,7 +232,6 @@ namespace QuickPing.Utilities
 
         #endregion
 
-
         #region Extensions
         private static void Write(this ZPackage zPackage, Minimap.PinData pinData)
         {
@@ -246,8 +249,7 @@ namespace QuickPing.Utilities
                 m_pos = package.ReadVector3()
             };
         }
+
         #endregion
-
-
     }
 }

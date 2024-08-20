@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-namespace QuickPing.Utilities
+namespace QuickPing2.Utilities
 {
     internal static class GO_Ext
     {
@@ -17,7 +17,6 @@ namespace QuickPing.Utilities
                 return GetRecursiveComponentInParents<IDestructible>(root.parent);
         }
 
-
         public static GameObject GetRecursiveParentWithComponent<T>(Transform root)
         {
             if (!root.parent) return null;
@@ -28,9 +27,8 @@ namespace QuickPing.Utilities
             else
                 return GetRecursiveParentWithComponent<T>(root.parent);
         }
-
-
     }
+
     internal static class DataUtils
     {
 
@@ -51,7 +49,5 @@ namespace QuickPing.Utilities
             return x.m_pos == y.m_pos
                 && x.m_name == y.m_name;
         }
-
-
     }
 }
